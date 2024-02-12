@@ -1,0 +1,20 @@
+FROM node:20
+FROM MongoDB:latest
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Any additional setup or commands needed for your application
+
+# Copy the application files from your host to the container
+COPY . .
+
+#ADD public.tar.gz .
+RUN npm install && npm run build
+
+ARG PORT_ARG=8080
+ENV PORT=$PORT_ARG
+EXPOSE $PORT_ARG
+ENTRYPOINT ["npm", "start"]
+# Define the command to run your application
+

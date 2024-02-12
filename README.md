@@ -1,93 +1,127 @@
-# ex_3
+# Training exercise 1 - Installing RancherDesktop
+
+## Intro
+
+For us to have means to create docker images, we need to have tools
+installed. In this exercise you are to install RancherDesktop.
+
+## Do
+
+Install the appropriate version for your OS from here https://rancherdesktop.io
+
+You can find installation guidelines here: https://docs.rancherdesktop.io/getting-started/installation
+
+Verify from a console that running the command _docker ps_ works.
+
+# Training exercise 2 - Docker
+
+In this exercise you are going to dockerize your first application. Use the one
+you created in the previous exercise.
+
+## Building
+
+Create a build with an appropriate named tag and verify that you actually now have an image with that name.
+- What image did you inherit from and how is that done?
+>>You inherit an image by specifying it in your Dockerfile with the FROM keyword, like FROM node:20.
+- Which command is need to build and hence determine which images you have on
+  your machine and thus at your disposal.
+>>Command to Build: Use docker build -t <tag_name> . to build the Docker image.
+## Running
+
+You can run your newly created image in non-interactive and interactive mode. Try both. 
+- What do you do to do either?
+>>Non-interactive Mode: Run docker run <image_name> for non-interactive mode.
+Interactive Mode: Use docker run -it <image_name> /bin/bash for interactive mode.
+- When running in non-iteractive mode your console is at your disposal. Do list
+the current containers and verify that yours is there.
+>>Use docker ps to list the current containers and verify that yours is there.
+
+- Most of the time you want said container discard when the container terminates, how do you do that?
+>>Use the --rm flag to remove the container when it is stopped, e.g., docker run --rm <image_name>.
+
+## Expose port
+
+A web service is usually accessible via some port otherwise its services will be
+somewhat useless. 
+
+Expose the port on which you have created your web service, such that you can
+access its services via your browser and see that it works.
+- How do you expose a port such that you can access it on the host machine?
+>>Use the -p flag to expose a port, e.g., docker run -p 8080:80 <image_name>.
+
+- Is it possible to expose more than one port?
+>>Yes, it is possible to expose more than one port by using the -p flag multiple times, e.g., docker run -p 8080:80 -p 8081:81 <image_name>.
+
+## Enter a running container
+
+Sometimes it is beneficial to enter a container, look at log files, run scripts
+or programs to test, verify or simply try something. 
+
+- What is the first obvious thing you need to do? 
+>>The first obvious thing to do is to find the container ID or name using docker ps.
+- Which command do you use to enter a running container?
+>>Use docker exec -it <container_id> /bin/bash to enter a running container.
+- Sometimes executing the command you wish to run be hand in the container can
+  be very desirable, however this is usually what happens per default. So what
+  could be done to get your container started and then enter it starting your
+  application by hand?!
+>> Custom Entry: Start the container with docker run -it <image_name> and then manually run your desired command inside the container.
+
+## Volumes
+
+Containers are selfcontained, however in 2 intances one would like the
+container to have external access.
+1. Retaining data could pertain to log files og generated data of soughts
+2. It could be a directory containing source files are mounted within the
+container such that changes outside are seen and processed inside.
+
+Try to achieve both...
+- What are your considerations?
+>> Considerations: You need to consider the location of the files you want to mount and the location you want to mount them to inside the container.
+
+- Are there additional valid points as why this is a good idea?
+>> Additional Points: It is a good idea to use volumes to retain data and source files because it allows you to keep the data and source files even if the container is removed.
+- Do you use relative or absolute paths for this to work?
+>> Use absolute paths to mount volumes, e.g., docker run -v /path/to/host:/path/to/container <image_name>.
 
 
+## Finally clean up
 
-## Getting started
+Find the images/containers that you have created and remove them. 
+- Commands to figure out which container / images are available on your system
+- Which commands were needed to facilitate this
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+>>List Containers/Images: Run docker ps -a to list containers and docker images to list images.
+>>Removal Commands: Use docker rm <container_id or name> to remove containers and docker rmi <image_id or name> to remove images.
+## Resources
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### Intro
+On a container you can set different constraints such as number of CPU cores,
+amount of CPU time as well as the amount of memory available to the container
+furthermore, a container can have a restart policy.
 
-## Add your files
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### Test app
+To test and verify these we would need an app or apps. Which one? Either find
+one on the net or write your own, being a script or exe file. Your choice.
 
-```
-cd existing_repo
-git remote add origin https://gitlab.au.dk/wao-exercises1/ex_3.git
-git branch -M main
-git push -uf origin main
-```
+### Image
+Create an image, meaning create your own Dockerfile, that contains this
+application(s). The image you create must be based on some base image of your
+favourite Linux distro, that being Ubuntu, Slack, Fedora, etc. Add your
+application(s) to the image.
 
-## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.au.dk/wao-exercises1/ex_3/-/settings/integrations)
+Now we have our test image.
 
-## Collaborate with your team
+### Docker commands
+Figure out which commands, using the docker cli, to facilitate the set
+requirements. Describe them and how to use them.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### Testing/Verifing
+Spin up the container based on our image. Either at start or update the set
+requirements on the running container.
 
-## Test and Deploy
+Finally explain how to actually test and verify using your app(s)/scripts,
+whether they run using CMD or enter the container or ???
 
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
